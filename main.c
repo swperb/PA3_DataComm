@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
 
 
 int linearBackoff(int N) {
@@ -24,15 +25,16 @@ int linearBackoff(int N) {
 
             selection = rand() % slots;
 
+            W[selection] += 1;
 
-            for (j = 0; j < slots; j++) {
+            // for (j = 0; j < slots; j++) {
 
-                if(selection == j) {
-                    W[j] += 1;
+            //     if(selection == j) {
+            //         W[j] += 1;
             
-                }
+            //     }
 
-            } 
+            // } 
 
 
 
@@ -72,13 +74,14 @@ int binaryExponentialBackoff(int N) {
 
             selection = rand() % slots;
 
+            W[selection] += 1;
 
-            for (j = 0; j < slots; j++) {
+            // for (j = 0; j < slots; j++) {
 
-                if(selection == j) {
-                    W[j] += 1;
-                }
-            } 
+            //     if(selection == j) {
+            //         W[j] += 1;
+            //     }
+            // } 
 
         }  
 
@@ -118,13 +121,14 @@ int loglogBackoff(int N) {
 
             selection = rand() % slots;
 
+            W[selection] += 1;
 
-            for (j = 0; j < slots; j++) {
+            // for (j = 0; j < slots; j++) {
 
-                if(selection == j) {
-                    W[j] += 1;
-                }
-            }
+            //     if(selection == j) {
+            //         W[j] += 1;
+            //     }
+            // }
 
 
         }        
@@ -168,8 +172,6 @@ int main() {
             binarySum += binaryExponentialBackoff(i);
             logSum += loglogBackoff(i);
 
-            // sleep(1);
-            // printf("%d\n", logSum);
 
         }
 
