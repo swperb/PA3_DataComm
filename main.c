@@ -23,8 +23,10 @@ int linearBackoff(int N) {
     int* W;
     //initialize number of slots
     int slots = 2;
-    //initialize number of succesful devices
-    int success = 0;
+
+    //initialize sum of window sizes
+    int sum = 0;
+
     //initialize selected slot
     int selection;
     
@@ -35,6 +37,13 @@ int linearBackoff(int N) {
 
     //Loop until every device succeeds
     while(N > 0) {
+
+        
+        sum += slots;
+
+        //initialize number of succesful devices
+        int success = 0;
+
         //initialze contiguous int array to record device selections
         //this is reinitialized each iteration
         W = (int*)calloc(slots, sizeof(int));
@@ -65,12 +74,26 @@ int linearBackoff(int N) {
         //decrement successful devices
         N -= success;
 
+
+
+        //if all devices succeed
+        if (N == 0) {
+            //subtract window size and add successful slots
+            sum = (sum - slots) + success;
+            //break out of loop
+            break;
+        }
+      
+
         //increase slots by factor of 1 (linear)
         slots += 1;
 
+
     }
-    //return number of slots required for every device to succeed
-    return slots;
+
+    //return total number of slots required for every device to succeed
+    //sum of all window sizes up to last successful device
+    return sum;
 }
 
 
@@ -87,8 +110,10 @@ int binaryExponentialBackoff(int N) {
     int* W;
     //initialize number of slots
     int slots = 2;
-    //initialize number of successful devices
-    int success = 0;
+
+    //initialize sum of window sizes
+    int sum = 0;
+
     //initialize selected slot
     int selection;
 
@@ -99,6 +124,11 @@ int binaryExponentialBackoff(int N) {
 
     //loop until every device succeeds
     while(N > 0) {
+
+        sum += slots;
+
+        //initialize number of successful devices
+        int success = 0;        
 
         //initialze contiguous int array to record device selections
         //this is reinitialized each iteration
@@ -130,12 +160,24 @@ int binaryExponentialBackoff(int N) {
         //decrement successful devices
         N -= success;
 
+
+
+        //if all devices succeed
+        if (N == 0) {
+            //subtract window size and add successful slots
+            sum = (sum - slots) + success;
+            //break out of loop
+            break;
+        }
+
+
         //increase slots by factor of 2 (binary exponential)
         slots *= 2;
     }
 
-    //return number of slots required for every device to succeed
-    return slots;
+    //return total number of slots required for every device to succeed
+    //sum of all window sizes up to last successful device
+    return sum;
 }
 
 
@@ -153,8 +195,10 @@ int loglogBackoff(int N) {
     int* W;
     //initialize number of slots
     int slots = 4;
-    //initialize number of successful devices
-    int success = 0;
+
+    //initialize sum of window sizes
+    int sum = 0;
+
     //initialize selected slot
     int selection;
 
@@ -165,6 +209,11 @@ int loglogBackoff(int N) {
 
     //loop until every device succeeds    
     while(N > 0) {
+
+        sum += slots;
+
+        //initialize number of successful devices
+        int success = 0;
 
         //initialze contiguous int array to record device selections
         //this is reinitialized each iteration
@@ -198,13 +247,24 @@ int loglogBackoff(int N) {
         //decrement successful devices
         N -= success; 
 
+
+        //if all devices succeed
+        if (N == 0) {
+            //subtract window size and add successful slots
+            sum = (sum - slots) + success;
+            //break out of loop
+            break;
+        }
+        
+
         //increase slots using formula (loglog)
         slots = floor((1 + 1/log2(log2(slots))) * slots);
     
     }
 
-    //return number of slots required for every device to succeed
-    return slots;
+    //return total number of slots required for every device to succeed
+    //sum of all window sizes up to last successful device
+    return sum;
 }
 
 
